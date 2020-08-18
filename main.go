@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/usagiga/envs-go"
+	"github.com/usagiga/pigeon/infra"
 	"github.com/usagiga/pigeon/model"
 	"log"
 )
@@ -15,7 +16,10 @@ func main() {
 	}
 
 	// Initialize esa.io client
-	_ = ConnectToEsa(config)
+	esaClient := ConnectToEsa(config)
+
+	// Initialize infra
+	_ = infra.NewEsaInfra(esaClient)
 
 	fmt.Println("Hello, World!")
 }
