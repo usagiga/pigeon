@@ -19,7 +19,8 @@ See also [docs](./docs/docker.md).
 
 ## Dependencies
 
-- Go
+- Go (1.15 or higher)
+- [github.com/hiroakis/esa-go](https://github.com/hiroakis/esa-go/)
 
 
 ## License

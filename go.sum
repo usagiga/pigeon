@@ -1,0 +1,6 @@
+github.com/hiroakis/esa-go v0.0.0-20190815092300-6548c4b03304 h1:xgSx4JlnZZyK49F4UNJBS+wBwtt59MyDyqS0Q9E+YNE=
+github.com/hiroakis/esa-go v0.0.0-20190815092300-6548c4b03304/go.mod h1:SDQLK9nb2q1K2KbhIZzXrzs0E8TGXGtRLLxztTnFw/o=
+github.com/usagiga/envs-go v1.0.0 h1:ROnWnBNfeoiFk/WoRMON0rfnAUYDVOOtoeqQcGzEgqY=
+github.com/usagiga/envs-go v1.0.0/go.mod h1:PcpJgkuqWg0+YNOk+pxr2I1sl8xEFiz1CqTWVjKhgEE=
+golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 h1:go1bK/D/BFZV2I8cIQd1NKEZ+0owSTG1fDTci4IqFcE=
+golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
