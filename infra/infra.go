@@ -9,3 +9,8 @@ type EsaInfra interface {
 type ImageInfra interface {
 	Fetch(dstPath, srcUrl string) (err error)
 }
+
+type GitInfra interface {
+	CommitUnStaged(message string) (err error)
+	Push() (err error)
+}
