@@ -2,10 +2,10 @@ xxx:
 	@echo "Please select optimal option."
 
 build:
-	@go build -o go-template .
+	@go build -o pigeon .
 
 clean:
-	@rm -f ./go-template
+	@rm -f ./pigeon
 	@rm -f ./docker/__debug_bin
 
 run:

@@ -1,6 +1,6 @@
 FROM golang:1.15
 
-WORKDIR /go/src/github.com/usagiga/go-template
+WORKDIR /go/src/github.com/usagiga/pigeon
 
 RUN go get -u github.com/go-delve/delve/cmd/dlv
 RUN go get -u github.com/cosmtrek/air

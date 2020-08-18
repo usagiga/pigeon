@@ -1,6 +1,6 @@
 version: '3'
 services:
-  go-template-debug:
+  pigeon-debug:
     build:
       context: .
       dockerfile: ./docker/go/Dockerfile-Debug
@@ -8,4 +8,4 @@ services:
     ports:
       - 2345:2345
     volumes:
-      - .:/go/src/github.com/usagiga/go-template
+      - .:/go/src/github.com/usagiga/pigeon

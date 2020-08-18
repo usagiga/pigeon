@@ -1,12 +1,12 @@
-# ${REPO_NAME}
+# pigeon
 
-${REPO_DESC}
+Post article on esa.io into github repository
 
 
 ## Installation
 
 ```sh
-$ go get github.com/usagiga/${REPO_NAME}
+$ go get github.com/usagiga/pigeon
 ```
 
 And you can use Docker Compose.

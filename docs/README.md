@@ -1,4 +1,4 @@
-# go-template Docs
+# pigeon Docs
 
 ## Index
 
