@@ -23,7 +23,7 @@ func NewTransferApplication(
 
 func (a *TransferApplicationImpl) TransferArticle(config *model.Config, postId int) {
 	// Initialize git repository
-	repoDir, err := a.gitRepositoryUseCase.Initialize("", "", "")
+	repoDir, err := a.gitRepositoryUseCase.Initialize(config.DiaryRepoURL, config.ArticleDir, config.ImageDir)
 	if err != nil {
 		log.Fatalf("Can't initialize git repository: %+v", err)
 	}
@@ -53,7 +53,6 @@ func (a *TransferApplicationImpl) TransferArticle(config *model.Config, postId i
 	if err != nil {
 		log.Fatalf("Can't store article: %+v", err)
 	}
-
 
 	// Push
 	err = a.gitRepositoryUseCase.CommitAndPush(repoDir)
