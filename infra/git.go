@@ -47,7 +47,7 @@ func (i *GitInfraImpl) CommitUnStaged(projectRootDir, message string) (err error
 }
 
 func (i *GitInfraImpl) Push(projectRootDir string) (err error) {
-	err = i.runGit(projectRootDir, "push", "origin", "head")
+	err = i.runGit(projectRootDir, "push", "origin", "HEAD")
 	if err != nil {
 		return xerrors.Errorf("Can't run `git commit`: %w", err)
 	}
