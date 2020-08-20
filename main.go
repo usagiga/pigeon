@@ -1,14 +1,18 @@
 package main
 
 import (
-	"fmt"
 	"github.com/usagiga/envs-go"
+	"github.com/usagiga/pigeon/application"
+	"github.com/usagiga/pigeon/domain"
 	"github.com/usagiga/pigeon/infra"
 	"github.com/usagiga/pigeon/model"
 	"log"
 )
 
 func main() {
+	// Parse args
+	postId := ParseArgs()
+
 	// Load config from envs
 	config := &model.Config{}
 	if err := envs.Load(config); err != nil {
@@ -19,7 +23,18 @@ func main() {
 	esaClient := ConnectToEsa(config)
 
 	// Initialize infra
-	_ = infra.NewEsaInfra(esaClient)
+	esaInfra := infra.NewEsaInfra(esaClient)
+	gitInfra := infra.NewGitInfra()
+	imageInfra := infra.NewImageInfra()
 
-	fmt.Println("Hello, World!")
+	// Initialize Domain
+	gitRepoUseCase := domain.NewGitRepositoryUseCase(gitInfra)
+	imageStoreKeeperUseCase := domain.NewImageStoreKeeperUseCase(imageInfra)
+	articleBuilderUseCase := domain.NewArticleBuilderUseCase(imageStoreKeeperUseCase, esaInfra)
+
+	// Initialize Application
+	transferApplication := application.NewTransferApplication(articleBuilderUseCase, gitRepoUseCase)
+
+	// Run
+	transferApplication.TransferArticle(config, postId)
 }

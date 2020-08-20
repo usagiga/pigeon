@@ -11,8 +11,12 @@ type GitRepositoryUseCaseImpl struct {
 	gitInfra infra.GitInfra
 }
 
-func NewGitRepositoryUseCase() (domain GitRepositoryUseCase) {
-	return &GitRepositoryUseCaseImpl{}
+func NewGitRepositoryUseCase(
+	gitInfra infra.GitInfra,
+) (domain GitRepositoryUseCase) {
+	return &GitRepositoryUseCaseImpl{
+		gitInfra: gitInfra,
+	}
 }
 
 func (d *GitRepositoryUseCaseImpl) Initialize(repoUrl, articleDir, imageDir string) (repoDir *model.GitRepoDir, err error) {

@@ -9,7 +9,7 @@ import (
 
 type GitInfraImpl struct{}
 
-func NewGitInfra(baseDir, repoUrl string) (infra GitInfra) {
+func NewGitInfra() (infra GitInfra) {
 	return &GitInfraImpl{}
 }
 
