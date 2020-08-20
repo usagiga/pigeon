@@ -5,7 +5,8 @@ import "testing"
 type gitRepoDirArgs struct {
 	ProjectRootDir string
 	ArticleDir     string
-	ImageDir       string
+	ImageStoreDir  string
+	ImageViewDir   string
 }
 
 type gitRepoDirResults struct {
@@ -24,7 +25,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "~/test/",
 			ArticleDir:     "article/",
-			ImageDir:       "image/",
+			ImageStoreDir:  "image/",
 		},
 		ExpectingResults: gitRepoDirResults{
 			ArticleDir: "~/test/article",
@@ -36,7 +37,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "./test/",
 			ArticleDir:     "article/",
-			ImageDir:       "image/",
+			ImageStoreDir:  "image/",
 		},
 		ExpectingResults: gitRepoDirResults{
 			ArticleDir: "test/article",
@@ -48,7 +49,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "test/",
 			ArticleDir:     "article/",
-			ImageDir:       "image/",
+			ImageStoreDir:  "image/",
 		},
 		ExpectingResults: gitRepoDirResults{
 			ArticleDir: "test/article",
@@ -60,7 +61,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "/tmp/",
 			ArticleDir:     "article/",
-			ImageDir:       "image/",
+			ImageStoreDir:  "image/",
 		},
 		ExpectingResults: gitRepoDirResults{
 			ArticleDir: "/tmp/article",
@@ -72,7 +73,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "test",
 			ArticleDir:     "article/",
-			ImageDir:       "image/",
+			ImageStoreDir:  "image/",
 		},
 		ExpectingResults: gitRepoDirResults{
 			ArticleDir: "test/article",
@@ -85,7 +86,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "test",
 			ArticleDir:     "~/article/",
-			ImageDir:       "image/",
+			ImageStoreDir:  "image/",
 		},
 	},
 	{
@@ -93,7 +94,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "test",
 			ArticleDir:     "./article/",
-			ImageDir:       "image/",
+			ImageStoreDir:  "image/",
 		},
 		ExpectingResults: gitRepoDirResults{
 			ArticleDir: "test/article",
@@ -105,7 +106,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "test",
 			ArticleDir:     "/tmp/",
-			ImageDir:       "image/",
+			ImageStoreDir:  "image/",
 		},
 	},
 	// Test for image dir
@@ -114,7 +115,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "test",
 			ArticleDir:     "article/",
-			ImageDir:       "~/image/",
+			ImageStoreDir:  "~/image/",
 		},
 	},
 	{
@@ -122,7 +123,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "test",
 			ArticleDir:     "article/",
-			ImageDir:       "./image/",
+			ImageStoreDir:  "./image/",
 		},
 		ExpectingResults: gitRepoDirResults{
 			ArticleDir: "test/article",
@@ -134,7 +135,7 @@ var testCases = []struct {
 		TestingArgs: gitRepoDirArgs{
 			ProjectRootDir: "test",
 			ArticleDir:     "article/",
-			ImageDir:       "/tmp/",
+			ImageStoreDir:  "/tmp/",
 		},
 	},
 }
@@ -148,7 +149,8 @@ func TestNewGitRepoDir(t *testing.T) {
 		_, err := NewGitRepoDir(
 			testingValue.ProjectRootDir,
 			testingValue.ArticleDir,
-			testingValue.ImageDir,
+			testingValue.ImageStoreDir,
+			testingValue.ImageViewDir,
 		)
 
 		// When raising NOT expected error
@@ -171,7 +173,8 @@ func TestGitRepoDir_ArticleDir(t *testing.T) {
 		gitRepoDir, err := NewGitRepoDir(
 			testingValue.ProjectRootDir,
 			testingValue.ArticleDir,
-			testingValue.ImageDir,
+			testingValue.ImageStoreDir,
+			testingValue.ImageViewDir,
 		)
 
 		// All errors are NOT for this method
@@ -201,7 +204,8 @@ func TestGitRepoDir_ImageDir(t *testing.T) {
 		gitRepoDir, err := NewGitRepoDir(
 			testingValue.ProjectRootDir,
 			testingValue.ArticleDir,
-			testingValue.ImageDir,
+			testingValue.ImageStoreDir,
+			testingValue.ImageViewDir,
 		)
 
 		// All errors are NOT for this method
