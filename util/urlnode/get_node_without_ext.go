@@ -6,7 +6,7 @@ func NodeWithoutExt(node string) (nodeBody string) {
 	index := strings.LastIndex(node, ".")
 
 	// There is no `.`
-	if index != -1 {
+	if index == -1 {
 		return node
 	}
 
