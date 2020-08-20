@@ -19,7 +19,7 @@ func NewGitRepositoryUseCase(
 	}
 }
 
-func (d *GitRepositoryUseCaseImpl) Initialize(repoUrl, articleDir, imageDir string) (repoDir *model.GitRepoDir, err error) {
+func (d *GitRepositoryUseCaseImpl) Initialize(repoUrl, articleDir, imageDir, imageViewDir string) (repoDir *model.GitRepoDir, err error) {
 	// Clone
 	dstDir := os.TempDir()
 	projectRootDir, err := d.gitInfra.Clone(dstDir, repoUrl)
@@ -28,7 +28,7 @@ func (d *GitRepositoryUseCaseImpl) Initialize(repoUrl, articleDir, imageDir stri
 	}
 
 	// Return its dir info
-	repoDir, err = model.NewGitRepoDir(projectRootDir, articleDir, imageDir)
+	repoDir, err = model.NewGitRepoDir(projectRootDir, articleDir, imageDir, imageViewDir)
 	if err != nil {
 		return nil, xerrors.Errorf("specified article or image dir aren't suited for it(ArticleDir: %s, ImageDir: %s) : %w", articleDir, imageDir, err)
 	}

@@ -3,7 +3,7 @@ package domain
 import "github.com/usagiga/pigeon/model"
 
 type GitRepositoryUseCase interface {
-	Initialize(repoUrl, articleDir, imageDir string) (repoDir *model.GitRepoDir, err error)
+	Initialize(repoUrl, articleDir, imageDir, imageViewDir string) (repoDir *model.GitRepoDir, err error)
 	CommitAndPush(repoDir *model.GitRepoDir) (err error)
 	Dispose(repoDir *model.GitRepoDir) (err error)
 }

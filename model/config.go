@@ -6,7 +6,8 @@ type Config struct {
 
 	GitBinPath string `envs:"PIGEON_GIT_BIN"`
 
-	DiaryRepoURL string `envs:"PIGEON_DIARY_REPO_URL"`
-	ArticleDir   string `envs:"PIGEON_PROJECT_ARTICLE_DIR"`
-	ImageDir     string `envs:"PIGEON_PROJECT_IMAGE_DIR"`
+	DiaryRepoURL  string `envs:"PIGEON_DIARY_REPO_URL"`
+	ArticleDir    string `envs:"PIGEON_PROJECT_ARTICLE_DIR"`
+	ImageStoreDir string `envs:"PIGEON_PROJECT_IMAGE_DIR"`
+	ImageViewDir  string `envs:"PIGEON_PROJECT_IMAGE_VIEW_DIR"`
 }

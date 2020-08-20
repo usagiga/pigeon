@@ -31,5 +31,5 @@ func (d *ImageStoreKeeperUseCaseImpl) Store(repoDir *model.GitRepoDir, url strin
 		return "", xerrors.Errorf("can't get file name from URL(URL: %s) : %w", url, err)
 	}
 
-	return path.Join(repoDir.RelativeImageDir(), fileName), nil
+	return path.Join(repoDir.RelativeImageViewDir(), fileName), nil
 }

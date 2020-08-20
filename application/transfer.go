@@ -23,7 +23,12 @@ func NewTransferApplication(
 
 func (a *TransferApplicationImpl) TransferArticle(config *model.Config, postId int) {
 	// Initialize git repository
-	repoDir, err := a.gitRepositoryUseCase.Initialize(config.DiaryRepoURL, config.ArticleDir, config.ImageDir)
+	repoDir, err := a.gitRepositoryUseCase.Initialize(
+		config.DiaryRepoURL,
+		config.ArticleDir,
+		config.ImageStoreDir,
+		config.ImageViewDir,
+	)
 	if err != nil {
 		log.Fatalf("Can't initialize git repository: %+v", err)
 	}

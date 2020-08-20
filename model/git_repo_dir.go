@@ -7,12 +7,13 @@ import (
 )
 
 type GitRepoDir struct {
-	ProjectRootDir     string
-	relativeArticleDir string
-	relativeImageDir   string
+	ProjectRootDir        string
+	relativeArticleDir    string
+	relativeImageStoreDir string
+	relativeImageViewDir  string
 }
 
-func NewGitRepoDir(projectRootDir, articleDir, imageDir string) (dir *GitRepoDir, err error) {
+func NewGitRepoDir(projectRootDir, articleDir, imageDir, imageViewDir string) (dir *GitRepoDir, err error) {
 	if path.IsAbs(articleDir) || path.IsAbs(imageDir) {
 		return nil, xerrors.New("article or image dir must be absolute path")
 	}
@@ -21,9 +22,10 @@ func NewGitRepoDir(projectRootDir, articleDir, imageDir string) (dir *GitRepoDir
 	}
 
 	return &GitRepoDir{
-		ProjectRootDir:     projectRootDir,
-		relativeArticleDir: articleDir,
-		relativeImageDir:   imageDir,
+		ProjectRootDir:        projectRootDir,
+		relativeArticleDir:    articleDir,
+		relativeImageStoreDir: imageDir,
+		relativeImageViewDir:  imageViewDir,
 	}, nil
 }
 
@@ -36,9 +38,13 @@ func (m *GitRepoDir) RelativeArticleDir() (dir string) {
 }
 
 func (m *GitRepoDir) ImageDir() (dir string) {
-	return path.Join(m.ProjectRootDir, m.relativeImageDir)
+	return path.Join(m.ProjectRootDir, m.relativeImageStoreDir)
 }
 
-func (m *GitRepoDir) RelativeImageDir() (dir string) {
-	return m.relativeImageDir
+func (m *GitRepoDir) RelativeImageStoreDir() (dir string) {
+	return m.relativeImageStoreDir
+}
+
+func (m *GitRepoDir) RelativeImageViewDir() (dir string) {
+	return m.relativeImageViewDir
 }
