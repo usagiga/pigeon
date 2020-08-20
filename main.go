@@ -24,7 +24,7 @@ func main() {
 
 	// Initialize infra
 	esaInfra := infra.NewEsaInfra(esaClient)
-	gitInfra := infra.NewGitInfra()
+	gitInfra := infra.NewGitInfra(config)
 	imageInfra := infra.NewImageInfra()
 
 	// Initialize Domain

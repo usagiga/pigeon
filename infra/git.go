@@ -1,25 +1,30 @@
 package infra
 
 import (
+	"github.com/usagiga/pigeon/model"
 	"github.com/usagiga/pigeon/util/urlnode"
 	"golang.org/x/xerrors"
 	"os"
 	"path"
 )
 
-type GitInfraImpl struct{}
+type GitInfraImpl struct{
+	gitBinPath string
+}
 
-func NewGitInfra() (infra GitInfra) {
-	return &GitInfraImpl{}
+func NewGitInfra(config *model.Config) (infra GitInfra) {
+	return &GitInfraImpl{
+		gitBinPath: config.GitBinPath,
+	}
 }
 
 func (i *GitInfraImpl) Clone(baseDir, repoUrl string) (projectRootDir string, err error) {
-	err = runGit(baseDir, "clone", repoUrl)
+	err = i.runGit(baseDir, "clone", repoUrl)
 	if err != nil {
 		return "", xerrors.Errorf("Can't run `git clone`", err)
 	}
 
-	repoDir, err := getRepoDir(baseDir, repoUrl)
+	repoDir, err := i.getRepoDir(baseDir, repoUrl)
 	if err != nil {
 		return "", xerrors.Errorf("Can't get repo dir", err)
 	}
@@ -28,12 +33,12 @@ func (i *GitInfraImpl) Clone(baseDir, repoUrl string) (projectRootDir string, er
 }
 
 func (i *GitInfraImpl) CommitUnStaged(projectRootDir, message string) (err error) {
-	err = runGit(projectRootDir, "add", ".")
+	err = i.runGit(projectRootDir, "add", ".")
 	if err != nil {
 		return xerrors.Errorf("Can't run `git add`", err)
 	}
 
-	err = runGit(projectRootDir, "commit", "-m", message)
+	err = i.runGit(projectRootDir, "commit", "-m", message)
 	if err != nil {
 		return xerrors.Errorf("Can't run `git commit`", err)
 	}
@@ -42,7 +47,7 @@ func (i *GitInfraImpl) CommitUnStaged(projectRootDir, message string) (err error
 }
 
 func (i *GitInfraImpl) Push(projectRootDir string) (err error) {
-	err = runGit(projectRootDir, "push", "origin", "head")
+	err = i.runGit(projectRootDir, "push", "origin", "head")
 	if err != nil {
 		return xerrors.Errorf("Can't run `git commit`", err)
 	}
@@ -50,8 +55,8 @@ func (i *GitInfraImpl) Push(projectRootDir string) (err error) {
 	return nil
 }
 
-func runGit(baseDir string, args ...string) (err error) {
-	proc, err := os.StartProcess("git", args, &os.ProcAttr{
+func (i *GitInfraImpl) runGit(baseDir string, args ...string) (err error) {
+	proc, err := os.StartProcess(i.gitBinPath, args, &os.ProcAttr{
 		Dir: baseDir,
 	})
 	if err != nil {
@@ -66,7 +71,7 @@ func runGit(baseDir string, args ...string) (err error) {
 	return nil
 }
 
-func getRepoDir(baseDir, repoUrl string) (repoDir string, err error) {
+func (i *GitInfraImpl) getRepoDir(baseDir, repoUrl string) (repoDir string, err error) {
 	repoLastNode, err := urlnode.GetLastNodeFromString(repoUrl)
 	if err != nil {
 		return "", xerrors.Errorf("Can't split repo url: %w", err)
