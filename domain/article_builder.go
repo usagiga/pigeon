@@ -74,7 +74,7 @@ func (d *ArticleBuilderUseCaseImpl) FormatArticle(repoDir *model.GitRepoDir, raw
 }
 
 func (d *ArticleBuilderUseCaseImpl) Store(repoDir *model.GitRepoDir, article *model.Article) (err error) {
-	destPath := path.Join(repoDir.ImageDir(), article.Title)
+	destPath := path.Join(repoDir.ArticleDir(), article.Title)
 
 	textBytes := []byte(article.Contents) // textBytes are UTF-8(according to Go implementation)
 	err = ioutil.WriteFile(destPath, textBytes, 0666)
