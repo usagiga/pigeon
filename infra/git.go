@@ -21,12 +21,12 @@ func NewGitInfra(config *model.Config) (infra GitInfra) {
 func (i *GitInfraImpl) Clone(baseDir, repoUrl string) (projectRootDir string, err error) {
 	err = i.runGit(baseDir, "clone", repoUrl)
 	if err != nil {
-		return "", xerrors.Errorf("Can't run `git clone`", err)
+		return "", xerrors.Errorf("Can't run `git clone`: %w", err)
 	}
 
 	repoDir, err := i.getRepoDir(baseDir, repoUrl)
 	if err != nil {
-		return "", xerrors.Errorf("Can't get repo dir", err)
+		return "", xerrors.Errorf("Can't get repo dir: %w", err)
 	}
 
 	return repoDir, nil
@@ -35,12 +35,12 @@ func (i *GitInfraImpl) Clone(baseDir, repoUrl string) (projectRootDir string, er
 func (i *GitInfraImpl) CommitUnStaged(projectRootDir, message string) (err error) {
 	err = i.runGit(projectRootDir, "add", ".")
 	if err != nil {
-		return xerrors.Errorf("Can't run `git add`", err)
+		return xerrors.Errorf("Can't run `git add`: %w", err)
 	}
 
 	err = i.runGit(projectRootDir, "commit", "-m", message)
 	if err != nil {
-		return xerrors.Errorf("Can't run `git commit`", err)
+		return xerrors.Errorf("Can't run `git commit`: %w", err)
 	}
 
 	return nil
@@ -49,7 +49,7 @@ func (i *GitInfraImpl) CommitUnStaged(projectRootDir, message string) (err error
 func (i *GitInfraImpl) Push(projectRootDir string) (err error) {
 	err = i.runGit(projectRootDir, "push", "origin", "head")
 	if err != nil {
-		return xerrors.Errorf("Can't run `git commit`", err)
+		return xerrors.Errorf("Can't run `git commit`: %w", err)
 	}
 
 	return nil
