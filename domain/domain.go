@@ -10,7 +10,7 @@ type GitRepositoryUseCase interface {
 
 type ArticleBuilderUseCase interface {
 	GetRawArticle(postId int) (rawArticle *model.Article, err error)
-	FormatArticle(rawArticle *model.Article) (formattedArticle *model.Article, err error)
+	FormatArticle(repoDir *model.GitRepoDir, rawArticle *model.Article) (formattedArticle *model.Article, err error)
 	Store(repoDir *model.GitRepoDir, article *model.Article) (err error)
 }
 

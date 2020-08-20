@@ -43,7 +43,7 @@ func (a *TransferApplicationImpl) TransferArticle(config *model.Config, postId i
 
 	// Format article
 	// (replace variables, image urls hosted on esa.io, ...)
-	formattedArticle, err := a.articleBuilderUseCase.FormatArticle(rawArticle)
+	formattedArticle, err := a.articleBuilderUseCase.FormatArticle(repoDir, rawArticle)
 	if err != nil {
 		log.Fatalf("Can't format article: %+v", err)
 	}
