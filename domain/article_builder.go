@@ -25,7 +25,7 @@ func NewArticleBuilderUseCase(
 	//noinspection RegExpRedundantEscape
 	return &ArticleBuilderUseCaseImpl{
 		imageMatchRule: regexp.MustCompile(
-			`(?:<img.*src="(https?://.+/.+\\.(?:png|jpeg|jpg|jfif|gif|webp)).*">|!\[.*\]\((https?://.+/.+\\.(?:png|jpeg|jpg|jfif|gif|webp)).*\))`,
+			`(?:<img.*src="(https?://.+/.+\.(?:png|jpeg|jpg|jfif|gif|webp)).*">|!\[.*\]\((https?://.+/.+\.(?:png|jpeg|jpg|jfif|gif|webp)).*\))`,
 		),
 		imageStoreKeeperUseCase: imageStoreKeeperUseCase,
 		esaInfra:                esaInfra,
