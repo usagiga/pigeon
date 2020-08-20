@@ -4,7 +4,7 @@ import (
 	"github.com/usagiga/pigeon/model"
 	"github.com/usagiga/pigeon/util/urlnode"
 	"golang.org/x/xerrors"
-	"os"
+	"os/exec"
 	"path"
 )
 
@@ -56,16 +56,12 @@ func (i *GitInfraImpl) Push(projectRootDir string) (err error) {
 }
 
 func (i *GitInfraImpl) runGit(baseDir string, args ...string) (err error) {
-	proc, err := os.StartProcess(i.gitBinPath, args, &os.ProcAttr{
-		Dir: baseDir,
-	})
+	cmd := exec.Command(i.gitBinPath, args...)
+	cmd.Dir = baseDir
+
+	err = cmd.Run()
 	if err != nil {
 		return xerrors.Errorf("Can't start `git` process: %w", err)
-	}
-
-	_, err = proc.Wait()
-	if err != nil {
-		return xerrors.Errorf("Can't wait `git` process: %w", err)
 	}
 
 	return nil
