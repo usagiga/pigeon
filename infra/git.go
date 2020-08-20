@@ -7,33 +7,33 @@ import (
 	"path"
 )
 
-type GitInfraImpl struct{
-	 projectRootDir string
+type GitInfraImpl struct{}
+
+func NewGitInfra(baseDir, repoUrl string) (infra GitInfra) {
+	return &GitInfraImpl{}
 }
 
-func NewGitInfra(baseDir, repoUrl string) (infra GitInfra, err error) {
+func (i *GitInfraImpl) Clone(baseDir, repoUrl string) (projectRootDir string, err error) {
 	err = runGit(baseDir, "clone", repoUrl)
 	if err != nil {
-		return nil, xerrors.Errorf("Can't run `git clone`", err)
+		return "", xerrors.Errorf("Can't run `git clone`", err)
 	}
 
 	repoDir, err := getRepoDir(baseDir, repoUrl)
 	if err != nil {
-		return nil, xerrors.Errorf("Can't get repo dir", err)
+		return "", xerrors.Errorf("Can't get repo dir", err)
 	}
 
-	return &GitInfraImpl{
-		projectRootDir: repoDir,
-	}, nil
+	return repoDir, nil
 }
 
-func (i *GitInfraImpl) CommitUnStaged(message string) (err error) {
-	err = runGit(i.projectRootDir, "add", ".")
+func (i *GitInfraImpl) CommitUnStaged(projectRootDir, message string) (err error) {
+	err = runGit(projectRootDir, "add", ".")
 	if err != nil {
 		return xerrors.Errorf("Can't run `git add`", err)
 	}
 
-	err = runGit(i.projectRootDir, "commit", "-m", message)
+	err = runGit(projectRootDir, "commit", "-m", message)
 	if err != nil {
 		return xerrors.Errorf("Can't run `git commit`", err)
 	}
@@ -41,8 +41,8 @@ func (i *GitInfraImpl) CommitUnStaged(message string) (err error) {
 	return nil
 }
 
-func (i *GitInfraImpl) Push() (err error) {
-	err = runGit(i.projectRootDir, "push", "origin", "head")
+func (i *GitInfraImpl) Push(projectRootDir string) (err error) {
+	err = runGit(projectRootDir, "push", "origin", "head")
 	if err != nil {
 		return xerrors.Errorf("Can't run `git commit`", err)
 	}

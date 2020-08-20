@@ -11,6 +11,7 @@ type ImageInfra interface {
 }
 
 type GitInfra interface {
-	CommitUnStaged(message string) (err error)
-	Push() (err error)
+	Clone(baseDir, repoUrl string) (projectRootDir string, err error)
+	CommitUnStaged(projectRootDir, message string) (err error)
+	Push(projectRootDir string) (err error)
 }
