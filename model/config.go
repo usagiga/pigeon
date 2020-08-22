@@ -12,6 +12,6 @@ type Config struct {
 	ImageViewDir  string `envs:"PIGEON_PROJECT_IMAGE_VIEW_DIR"`
 
 	// for GCS
-	ProjectID string `env:"PIGEON_PROJECT_ID"`
-	BucketID  string `env:"PIGEON_BUCKET_ID"`
+	ProjectID string `envs:"PIGEON_PROJECT_ID"`
+	BucketID  string `envs:"PIGEON_BUCKET_ID"`
 }
