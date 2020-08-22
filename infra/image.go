@@ -18,6 +18,7 @@ type ImageInfraImpl struct {
 
 func NewImageInfra(bucketName string, gcsClient *storage.Client) (infra ImageInfra) {
 	return &ImageInfraImpl{
+		bucketName: bucketName,
 		gcsClient: gcsClient,
 	}
 }
