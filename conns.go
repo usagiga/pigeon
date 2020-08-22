@@ -14,7 +14,7 @@ func ConnectToEsa(config *model.Config) (esaClient *esa.EsaClient) {
 
 func ConnectToStorage(config *model.Config) (storageClient *storage.Client, err error) {
 	if config.ProjectID == "" || config.BucketID == "" {
-		return nil, nil
+		return nil, xerrors.Errorf("can't initialize GCS client. there's no project or bucket id")
 	}
 
 	storageClient, err = storage.NewClient(context.TODO())
