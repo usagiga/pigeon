@@ -10,4 +10,8 @@ type Config struct {
 	ArticleDir    string `envs:"PIGEON_PROJECT_ARTICLE_DIR"`
 	ImageStoreDir string `envs:"PIGEON_PROJECT_IMAGE_DIR"`
 	ImageViewDir  string `envs:"PIGEON_PROJECT_IMAGE_VIEW_DIR"`
+
+	// for GCS
+	ProjectID string `env:"PIGEON_PROJECT_ID"`
+	BucketID  string `env:"PIGEON_BUCKET_ID"`
 }

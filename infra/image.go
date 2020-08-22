@@ -1,18 +1,25 @@
 package infra
 
 import (
+	"bytes"
+	"cloud.google.com/go/storage"
+	"context"
 	"github.com/usagiga/pigeon/util/urlnode"
 	"golang.org/x/xerrors"
+	"io"
 	"io/ioutil"
 	"net/http"
-	"os"
-	"path"
 )
 
-type ImageInfraImpl struct{}
+type ImageInfraImpl struct {
+	bucketName string
+	gcsClient  *storage.Client
+}
 
-func NewImageInfra() (infra ImageInfra) {
-	return &ImageInfraImpl{}
+func NewImageInfra(bucketName string, gcsClient *storage.Client) (infra ImageInfra) {
+	return &ImageInfraImpl{
+		gcsClient: gcsClient,
+	}
 }
 
 func (i *ImageInfraImpl) Fetch(dstDir, srcUrl string) (err error) {
@@ -29,10 +36,9 @@ func (i *ImageInfraImpl) Fetch(dstDir, srcUrl string) (err error) {
 	}
 
 	// Save into dir
-	dstPath := path.Join(dstDir, fileName)
-	err = i.storeIntoFile(dstPath, imageBytes)
+	err = i.storeIntoFile(fileName, imageBytes)
 	if err != nil {
-		return xerrors.Errorf("Can't store file(Path: %s): %w", dstPath, err)
+		return xerrors.Errorf("Can't store file(Name: %s): %w", fileName, err)
 	}
 
 	return nil
@@ -56,17 +62,14 @@ func (i *ImageInfraImpl) fetch(srcUrl string) (imageBytes []byte, err error) {
 }
 
 func (i *ImageInfraImpl) storeIntoFile(dstPath string, imageBytes []byte) (err error) {
-	file, err := os.Create(dstPath)
-	if err != nil {
-		return xerrors.Errorf("Can't create file(%s): %w", dstPath, err)
+	br := bytes.NewReader(imageBytes)
+
+	wc := i.gcsClient.Bucket(i.bucketName).Object(dstPath).NewWriter(context.TODO())
+	if _, err = io.Copy(wc, br); err != nil {
+		return xerrors.Errorf("can't write image into stream: %w", err)
 	}
-
-	//noinspection GoUnhandledErrorResult
-	defer file.Close()
-
-	_, err = file.Write(imageBytes)
-	if err != nil {
-		return xerrors.Errorf("Can't write data into file(%s): %w", dstPath, err)
+	if err := wc.Close(); err != nil {
+		return xerrors.Errorf("can't close stream: %w", err)
 	}
 
 	return nil
