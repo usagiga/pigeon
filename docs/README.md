@@ -2,4 +2,8 @@
 
 ## Index
 
-- [Docker & Compose](./docker.md)
+- [Configure](./configure.md)
+
+### Example
+
+- [Example esa.io Template](./example_template.md)
