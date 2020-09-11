@@ -6,13 +6,9 @@ build:
 
 clean:
 	@rm -f ./pigeon
-	@rm -f ./docker/__debug_bin
 
 run:
 	@go run .
-
-debug:
-	@air
 
 test:
 	@go test -v "./..."
