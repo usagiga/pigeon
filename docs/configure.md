@@ -25,6 +25,7 @@ Please set env vars as below.
 - `PIGEON_DIARY_REPO_URL` : Your diary repository on GitHub
 - `PIGEON_PROJECT_ARTICLE_DIR` : Directory where article store. It needs relative path(its origin is project root).
 - `PIGEON_PROJECT_IMAGE_DIR` : (OBSOLETED) Directory where images store. It needs  relative path.
+- `PIGEON_PROJECT_IMAGE_VIEW_DIR` : Base URL where images store.
 - `PIGEON_PROJECT_ID` : Project ID on GCP
 - `PIGEON_BUCKET_ID` : GCS Bucket ID on `PIGEON_PROJECT_ID`
 - `GOOGLE_APPLICATION_CREDENTIALS` : Path to JSON of GCP credential to use GCS
