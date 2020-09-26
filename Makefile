@@ -1,4 +1,4 @@
-MOCKGEN=$(go env GOPATH)/bin/mockgen
+MOCKGEN=$(shell go env GOPATH)/bin/mockgen
 
 xxx:
 	@echo "Please select optimal option."
@@ -13,8 +13,8 @@ run:
 	@go run .
 
 gen_mock:
-	@$MOCKGEN -source=./infra/infra.go -destination=./util/mock/mock_infra/infra.go
-	@$MOCKGEN -source=./domain/domain.go -destination=./util/mock/mock_domain/domain.go
+	@$(MOCKGEN) -source=./infra/infra.go -destination=./util/mock/mock_infra/infra.go
+	@$(MOCKGEN) -source=./domain/domain.go -destination=./util/mock/mock_domain/domain.go
 
 test:
 	@make gen_mock
