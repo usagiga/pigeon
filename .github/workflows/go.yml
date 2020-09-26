@@ -20,7 +20,7 @@ jobs:
       id: go
 
     - name: Set up golang/mock
-      run: go get -u github.com/golang/mock/gomock
+      run: go get -u github.com/golang/mock/mockgen
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
