@@ -193,7 +193,7 @@ func TestGitRepoDir_ArticleDir(t *testing.T) {
 }
 
 func TestGitRepoDir_RelativeArticleDir(t *testing.T) {
-	t.Log("There's no test. This method is trivial.")
+	t.Skip("There's no test. This method is trivial.")
 }
 
 func TestGitRepoDir_ImageDir(t *testing.T) {
@@ -224,5 +224,5 @@ func TestGitRepoDir_ImageDir(t *testing.T) {
 }
 
 func TestGitRepoDir_RelativeImageDir(t *testing.T) {
-	t.Log("There's no test. This method is trivial.")
+	t.Skip("There's no test. This method is trivial.")
 }
