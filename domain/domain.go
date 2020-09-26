@@ -15,5 +15,5 @@ type ArticleBuilderUseCase interface {
 }
 
 type ImageStoreKeeperUseCase interface {
-	Store(repoDir *model.GitRepoDir, url string) (storedUrl string, err error)
+	Store(repoDir *model.GitRepoDir, srcUrl string) (storedUrl string, err error)
 }
