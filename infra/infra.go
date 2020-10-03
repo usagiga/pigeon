@@ -8,6 +8,7 @@ type EsaInfra interface {
 
 type ImageInfra interface {
 	Fetch(dstPath, srcUrl string) (err error)
+	Exists(fileName string) (exists bool, err error)
 }
 
 type GitInfra interface {

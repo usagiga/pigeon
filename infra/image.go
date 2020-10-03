@@ -24,16 +24,25 @@ func NewImageInfra(bucketName string, gcsClient *storage.Client) (infra ImageInf
 }
 
 func (i *ImageInfraImpl) Fetch(dstDir, srcUrl string) (err error) {
-	// Fetch from URL
-	imageBytes, err := i.fetch(srcUrl)
-	if err != nil {
-		return xerrors.Errorf("Can't fetch file from URL(URL: %s): %w", srcUrl, err)
-	}
-
 	// Get name from URL
 	fileName, err := urlnode.GetLastNodeFromString(srcUrl)
 	if err != nil {
 		return xerrors.Errorf("Can't get file name from URL(URL: %s): %w", srcUrl, err)
+	}
+
+	// Check redundant upload
+	exists, err := i.Exists(fileName)
+	if err != nil {
+		return xerrors.Errorf("Can't check image has already uploaded (Name: %s): %w", fileName, err)
+	}
+	if exists {
+		return nil
+	}
+
+	// Fetch from URL
+	imageBytes, err := i.fetch(srcUrl)
+	if err != nil {
+		return xerrors.Errorf("Can't fetch file from URL(URL: %s): %w", srcUrl, err)
 	}
 
 	// Save into dir
@@ -74,4 +83,16 @@ func (i *ImageInfraImpl) storeIntoFile(dstPath string, imageBytes []byte) (err e
 	}
 
 	return nil
+}
+
+func (i *ImageInfraImpl) Exists(fileName string) (exists bool, err error) {
+	_, err = i.gcsClient.Bucket(i.bucketName).Object(fileName).Attrs(context.TODO())
+	if err == storage.ErrObjectNotExist {
+		return false, nil
+	}
+	if err != nil {
+		return false, xerrors.Errorf("can't get GCS object attrs: %w", err)
+	}
+
+	return true, nil
 }
