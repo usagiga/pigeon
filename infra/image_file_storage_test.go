@@ -8,7 +8,6 @@ import (
 )
 
 var (
-	tmpDir        string
 	tmpGitRepoDir *model.GitRepoDir
 )
 
@@ -17,32 +16,25 @@ const (
 )
 
 func initTestFile(t *testing.T) {
-	tmpDir = os.TempDir()
+	tmpDir := os.TempDir()
+	tmpGitRepoDir, _ = model.NewGitRepoDir(tmpDir, "test", "test", "test")
 
-	err := os.MkdirAll(tmpDir, 666)
+	err := os.MkdirAll(tmpGitRepoDir.ImageDir(), 0666)
 	if err != nil {
 		t.Fatalf("Can't generate tmp dir: %v", err)
 	}
 
-	testFilePath := path.Join(tmpDir, tmpFile)
+	testFilePath := path.Join(tmpGitRepoDir.ImageDir(), tmpFile)
 	_, err = os.Create(testFilePath)
 	if err != nil {
 		t.Fatalf("Can't generate tmp file: %v", err)
 	}
-
-	tmpGitRepoDir, _ = model.NewGitRepoDir(tmpDir, "test", "test", "test")
 }
 
 func finalizeTestFile(t *testing.T) {
-	testFilePaths := []string{path.Join(tmpDir, tmpFile), path.Join(tmpDir, "index.html")}
-	for _, testFilePath := range testFilePaths {
-		err := os.Remove(testFilePath)
-		if os.IsNotExist(err) {
-			continue
-		}
-		if err != nil {
-			t.Errorf("Can't remove test files: %v", err)
-		}
+	err := os.RemoveAll(tmpGitRepoDir.ImageDir())
+	if err != nil {
+		t.Errorf("Can't remove test files: %v", err)
 	}
 }
 
@@ -55,7 +47,7 @@ func TestImageFileStorageInfraImpl_Exists(t *testing.T) {
 
 	// Declare test cases
 	type Arg struct {
-		repoDir *model.GitRepoDir
+		repoDir  *model.GitRepoDir
 		fileName string
 	}
 
@@ -72,7 +64,7 @@ func TestImageFileStorageInfraImpl_Exists(t *testing.T) {
 		{
 			isExpectedError: false,
 			arg: Arg{
-				repoDir: tmpGitRepoDir,
+				repoDir:  tmpGitRepoDir,
 				fileName: "existing.png",
 			},
 			result: Result{
@@ -83,7 +75,7 @@ func TestImageFileStorageInfraImpl_Exists(t *testing.T) {
 		{
 			isExpectedError: false,
 			arg: Arg{
-				repoDir: tmpGitRepoDir,
+				repoDir:  tmpGitRepoDir,
 				fileName: "not-existing.png",
 			},
 			result: Result{
@@ -145,7 +137,7 @@ func TestImageFileStorageInfraImpl_Fetch(t *testing.T) {
 			isExpectedError: false,
 			arg: Arg{
 				repoDir: tmpGitRepoDir,
-				srcUrl: "https://example.com/index.html",
+				srcUrl:  "https://example.com/index.html",
 			},
 			result: Result{
 				skipped: false,
@@ -156,7 +148,7 @@ func TestImageFileStorageInfraImpl_Fetch(t *testing.T) {
 			isExpectedError: false,
 			arg: Arg{
 				repoDir: tmpGitRepoDir,
-				srcUrl: "https://example.com/index.html",
+				srcUrl:  "https://example.com/index.html",
 			},
 			result: Result{
 				skipped: true,
@@ -167,7 +159,7 @@ func TestImageFileStorageInfraImpl_Fetch(t *testing.T) {
 			isExpectedError: true,
 			arg: Arg{
 				repoDir: tmpGitRepoDir,
-				srcUrl: "error",
+				srcUrl:  "error",
 			},
 			result: Result{
 				skipped: false,
