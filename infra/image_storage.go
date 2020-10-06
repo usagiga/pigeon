@@ -11,19 +11,19 @@ import (
 	"net/http"
 )
 
-type ImageInfraImpl struct {
+type ImageStorageInfraImpl struct {
 	bucketName string
 	gcsClient  *storage.Client
 }
 
-func NewImageInfra(bucketName string, gcsClient *storage.Client) (infra ImageInfra) {
-	return &ImageInfraImpl{
+func NewImageStorageInfra(bucketName string, gcsClient *storage.Client) (infra ImageStorageInfra) {
+	return &ImageStorageInfraImpl{
 		bucketName: bucketName,
 		gcsClient: gcsClient,
 	}
 }
 
-func (i *ImageInfraImpl) Fetch(dstDir, srcUrl string) (skipped bool, err error) {
+func (i *ImageStorageInfraImpl) Fetch(dstDir, srcUrl string) (skipped bool, err error) {
 	// Get name from URL
 	fileName, err := urlnode.GetLastNodeFromString(srcUrl)
 	if err != nil {
@@ -54,7 +54,7 @@ func (i *ImageInfraImpl) Fetch(dstDir, srcUrl string) (skipped bool, err error) 
 	return false, nil
 }
 
-func (i *ImageInfraImpl) fetch(srcUrl string) (imageBytes []byte, err error) {
+func (i *ImageStorageInfraImpl) fetch(srcUrl string) (imageBytes []byte, err error) {
 	res, err := http.Get(srcUrl)
 	if err != nil {
 		return nil, xerrors.Errorf("Can't download image(URL: %s): %w", srcUrl, err)
@@ -71,7 +71,7 @@ func (i *ImageInfraImpl) fetch(srcUrl string) (imageBytes []byte, err error) {
 	return imageBytes, nil
 }
 
-func (i *ImageInfraImpl) storeIntoFile(dstPath string, imageBytes []byte) (err error) {
+func (i *ImageStorageInfraImpl) storeIntoFile(dstPath string, imageBytes []byte) (err error) {
 	br := bytes.NewReader(imageBytes)
 
 	wc := i.gcsClient.Bucket(i.bucketName).Object(dstPath).NewWriter(context.TODO())
@@ -85,7 +85,7 @@ func (i *ImageInfraImpl) storeIntoFile(dstPath string, imageBytes []byte) (err e
 	return nil
 }
 
-func (i *ImageInfraImpl) Exists(fileName string) (exists bool, err error) {
+func (i *ImageStorageInfraImpl) Exists(fileName string) (exists bool, err error) {
 	_, err = i.gcsClient.Bucket(i.bucketName).Object(fileName).Attrs(context.TODO())
 	if err == storage.ErrObjectNotExist {
 		return false, nil

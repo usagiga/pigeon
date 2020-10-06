@@ -6,7 +6,7 @@ type EsaInfra interface {
 	GetArticle(id int) (article *model.Article, err error)
 }
 
-type ImageInfra interface {
+type ImageStorageInfra interface {
 	Fetch(dstPath, srcUrl string) (skipped bool, err error)
 	Exists(fileName string) (exists bool, err error)
 }

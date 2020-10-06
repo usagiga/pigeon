@@ -10,10 +10,10 @@ import (
 )
 
 type ImageStoreKeeperUseCaseImpl struct {
-	imageInfra infra.ImageInfra
+	imageInfra infra.ImageStorageInfra
 }
 
-func NewImageStoreKeeperUseCase(imageInfra infra.ImageInfra) (domain ImageStoreKeeperUseCase) {
+func NewImageStoreKeeperUseCase(imageInfra infra.ImageStorageInfra) (domain ImageStoreKeeperUseCase) {
 	return &ImageStoreKeeperUseCaseImpl{
 		imageInfra: imageInfra,
 	}

@@ -31,7 +31,7 @@ func main() {
 	// Initialize infra
 	esaInfra := infra.NewEsaInfra(esaClient)
 	gitInfra := infra.NewGitInfra(config)
-	imageInfra := infra.NewImageInfra(config.BucketID, gcsClient)
+	imageInfra := infra.NewImageStorageInfra(config.BucketID, gcsClient)
 
 	// Initialize Domain
 	gitRepoUseCase := domain.NewGitRepositoryUseCase(gitInfra)
