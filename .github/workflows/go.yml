@@ -25,6 +25,15 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
+    - name: Set up fake-gcs-server
+      run: |
+        sudo docker run \
+          -d \
+          --name fake-gcs-server \
+          -v ${{ github.workspace }}/docker/fgs/data:/data \
+          -p 4443:4443 \
+          fsouza/fake-gcs-server
+
     - name: Build
       run: make build
 
