@@ -1,13 +1,15 @@
 package infra
 
 import (
+	"github.com/usagiga/pigeon/model"
 	"os"
 	"path"
 	"testing"
 )
 
 var (
-	tmpDir string
+	tmpDir        string
+	tmpGitRepoDir *model.GitRepoDir
 )
 
 const (
@@ -27,6 +29,8 @@ func initTestFile(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Can't generate tmp file: %v", err)
 	}
+
+	tmpGitRepoDir, _ = model.NewGitRepoDir(tmpDir, "test", "test", "test")
 }
 
 func finalizeTestFile(t *testing.T) {
@@ -47,10 +51,11 @@ func TestImageFileStorageInfraImpl_Exists(t *testing.T) {
 	initTestFile(t)
 	defer finalizeTestFile(t)
 
-	imageInfra := NewImageFileStorageInfra(tmpDir)
+	imageInfra := NewImageFileStorageInfra()
 
 	// Declare test cases
 	type Arg struct {
+		repoDir *model.GitRepoDir
 		fileName string
 	}
 
@@ -67,6 +72,7 @@ func TestImageFileStorageInfraImpl_Exists(t *testing.T) {
 		{
 			isExpectedError: false,
 			arg: Arg{
+				repoDir: tmpGitRepoDir,
 				fileName: "existing.png",
 			},
 			result: Result{
@@ -77,6 +83,7 @@ func TestImageFileStorageInfraImpl_Exists(t *testing.T) {
 		{
 			isExpectedError: false,
 			arg: Arg{
+				repoDir: tmpGitRepoDir,
 				fileName: "not-existing.png",
 			},
 			result: Result{
@@ -88,7 +95,7 @@ func TestImageFileStorageInfraImpl_Exists(t *testing.T) {
 	// Run test
 	for i, v := range testCases {
 		caseNum := i + 1
-		exists, err := imageInfra.Exists(v.arg.fileName)
+		exists, err := imageInfra.Exists(v.arg.repoDir, v.arg.fileName)
 
 		// When raising NOT expected error
 		if err != nil && !v.isExpectedError {
@@ -117,12 +124,12 @@ func TestImageFileStorageInfraImpl_Fetch(t *testing.T) {
 	initTestFile(t)
 	defer finalizeTestFile(t)
 
-	imageInfra := NewImageFileStorageInfra(tmpDir)
+	imageInfra := NewImageFileStorageInfra()
 
 	// Declare test cases
 	type Arg struct {
-		destPath string
-		srcUrl   string
+		repoDir *model.GitRepoDir
+		srcUrl  string
 	}
 	type Result struct {
 		skipped bool
@@ -137,6 +144,7 @@ func TestImageFileStorageInfraImpl_Fetch(t *testing.T) {
 		{
 			isExpectedError: false,
 			arg: Arg{
+				repoDir: tmpGitRepoDir,
 				srcUrl: "https://example.com/index.html",
 			},
 			result: Result{
@@ -147,6 +155,7 @@ func TestImageFileStorageInfraImpl_Fetch(t *testing.T) {
 		{
 			isExpectedError: false,
 			arg: Arg{
+				repoDir: tmpGitRepoDir,
 				srcUrl: "https://example.com/index.html",
 			},
 			result: Result{
@@ -157,6 +166,7 @@ func TestImageFileStorageInfraImpl_Fetch(t *testing.T) {
 		{
 			isExpectedError: true,
 			arg: Arg{
+				repoDir: tmpGitRepoDir,
 				srcUrl: "error",
 			},
 			result: Result{
@@ -168,7 +178,7 @@ func TestImageFileStorageInfraImpl_Fetch(t *testing.T) {
 	// Run test
 	for i, v := range testCases {
 		caseNum := i + 1
-		skipped, err := imageInfra.Fetch(v.arg.srcUrl)
+		skipped, err := imageInfra.Fetch(v.arg.repoDir, v.arg.srcUrl)
 
 		// When raising NOT expected error
 		if err != nil && !v.isExpectedError {

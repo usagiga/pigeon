@@ -1,6 +1,7 @@
 package infra
 
 import (
+	"github.com/usagiga/pigeon/model"
 	"github.com/usagiga/pigeon/util/urlnode"
 	"golang.org/x/xerrors"
 	"io/ioutil"
@@ -10,14 +11,13 @@ import (
 )
 
 type ImageFileStorageInfraImpl struct {
-	DstDir string
 }
 
-func NewImageFileStorageInfra(dstDir string) (infra ImageStorageInfra) {
-	return &ImageFileStorageInfraImpl{DstDir: dstDir}
+func NewImageFileStorageInfra() (infra ImageStorageInfra) {
+	return &ImageFileStorageInfraImpl{}
 }
 
-func (i *ImageFileStorageInfraImpl) Fetch(srcUrl string) (skipped bool, err error) {
+func (i *ImageFileStorageInfraImpl) Fetch(repoDir *model.GitRepoDir, srcUrl string) (skipped bool, err error) {
 	// Get name from URL
 	fileName, err := urlnode.GetLastNodeFromString(srcUrl)
 	if err != nil {
@@ -25,7 +25,7 @@ func (i *ImageFileStorageInfraImpl) Fetch(srcUrl string) (skipped bool, err erro
 	}
 
 	// Check redundant upload
-	exists, err := i.Exists(fileName)
+	exists, err := i.Exists(repoDir, fileName)
 	if err != nil {
 		return false, xerrors.Errorf("Can't check image has already uploaded (Name: %s): %w", fileName, err)
 	}
@@ -40,7 +40,7 @@ func (i *ImageFileStorageInfraImpl) Fetch(srcUrl string) (skipped bool, err erro
 	}
 
 	// Save into dir
-	err = i.storeIntoFile(fileName, imageBytes)
+	err = i.storeIntoFile(repoDir, fileName, imageBytes)
 	if err != nil {
 		return false, xerrors.Errorf("Can't store file(Name: %s): %w", fileName, err)
 	}
@@ -65,8 +65,8 @@ func (i *ImageFileStorageInfraImpl) fetch(srcUrl string) (imageBytes []byte, err
 	return imageBytes, nil
 }
 
-func (i *ImageFileStorageInfraImpl) storeIntoFile(fileName string, imageBytes []byte) (err error) {
-	filePath := path.Join(i.DstDir, fileName)
+func (i *ImageFileStorageInfraImpl) storeIntoFile(repoDir *model.GitRepoDir, fileName string, imageBytes []byte) (err error) {
+	filePath := path.Join(repoDir.ImageDir(), fileName)
 	file, err := os.Create(filePath)
 	if err != nil {
 		return xerrors.Errorf("Can't create file(%s): %w", filePath, err)
@@ -83,8 +83,8 @@ func (i *ImageFileStorageInfraImpl) storeIntoFile(fileName string, imageBytes []
 	return nil
 }
 
-func (i *ImageFileStorageInfraImpl) Exists(fileName string) (exists bool, err error) {
-	filePath := path.Join(i.DstDir, fileName)
+func (i *ImageFileStorageInfraImpl) Exists(repoDir *model.GitRepoDir, fileName string) (exists bool, err error) {
+	filePath := path.Join(repoDir.ImageDir(), fileName)
 	_, err = os.Stat(filePath)
 	if os.IsNotExist(err) {
 		return false, nil

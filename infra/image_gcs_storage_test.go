@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"crypto/tls"
+	"github.com/usagiga/pigeon/model"
 	"google.golang.org/api/option"
 	"net/http"
 	"testing"
@@ -55,6 +56,7 @@ func TestImageGCSStorageInfraImpl_Exists(t *testing.T) {
 
 	// Declare test cases
 	type Arg struct {
+		repoDir *model.GitRepoDir
 		fileName string
 	}
 
@@ -92,7 +94,7 @@ func TestImageGCSStorageInfraImpl_Exists(t *testing.T) {
 	// Run test
 	for i, v := range testCases {
 		caseNum := i + 1
-		exists, err := imageInfra.Exists(v.arg.fileName)
+		exists, err := imageInfra.Exists(v.arg.repoDir, v.arg.fileName)
 
 		// When raising NOT expected error
 		if err != nil && !v.isExpectedError {
@@ -130,6 +132,7 @@ func TestImageGCSStorageInfraImpl_Fetch(t *testing.T) {
 
 	// Declare test cases
 	type Arg struct {
+		repoDir *model.GitRepoDir
 		srcUrl   string
 	}
 	type Result struct {
@@ -176,7 +179,7 @@ func TestImageGCSStorageInfraImpl_Fetch(t *testing.T) {
 	// Run test
 	for i, v := range testCases {
 		caseNum := i + 1
-		skipped, err := imageInfra.Fetch(v.arg.srcUrl)
+		skipped, err := imageInfra.Fetch(v.arg.repoDir, v.arg.srcUrl)
 
 		// When raising NOT expected error
 		if err != nil && !v.isExpectedError {

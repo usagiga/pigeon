@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"cloud.google.com/go/storage"
 	"context"
+	"github.com/usagiga/pigeon/model"
 	"github.com/usagiga/pigeon/util/urlnode"
 	"golang.org/x/xerrors"
 	"io"
@@ -23,7 +24,7 @@ func NewImageGCSStorageInfra(bucketName string, gcsClient *storage.Client) (infr
 	}
 }
 
-func (i *ImageGCSStorageInfraImpl) Fetch(srcUrl string) (skipped bool, err error) {
+func (i *ImageGCSStorageInfraImpl) Fetch(repoDir *model.GitRepoDir, srcUrl string) (skipped bool, err error) {
 	// Get name from URL
 	fileName, err := urlnode.GetLastNodeFromString(srcUrl)
 	if err != nil {
@@ -31,7 +32,7 @@ func (i *ImageGCSStorageInfraImpl) Fetch(srcUrl string) (skipped bool, err error
 	}
 
 	// Check redundant upload
-	exists, err := i.Exists(fileName)
+	exists, err := i.Exists(repoDir, fileName)
 	if err != nil {
 		return false, xerrors.Errorf("Can't check image has already uploaded (Name: %s): %w", fileName, err)
 	}
@@ -46,7 +47,7 @@ func (i *ImageGCSStorageInfraImpl) Fetch(srcUrl string) (skipped bool, err error
 	}
 
 	// Save into dir
-	err = i.storeIntoFile(fileName, imageBytes)
+	err = i.storeIntoFile(repoDir, fileName, imageBytes)
 	if err != nil {
 		return false, xerrors.Errorf("Can't store file(Name: %s): %w", fileName, err)
 	}
@@ -71,7 +72,7 @@ func (i *ImageGCSStorageInfraImpl) fetch(srcUrl string) (imageBytes []byte, err 
 	return imageBytes, nil
 }
 
-func (i *ImageGCSStorageInfraImpl) storeIntoFile(fileName string, imageBytes []byte) (err error) {
+func (i *ImageGCSStorageInfraImpl) storeIntoFile(_ *model.GitRepoDir, fileName string, imageBytes []byte) (err error) {
 	br := bytes.NewReader(imageBytes)
 
 	wc := i.gcsClient.Bucket(i.bucketName).Object(fileName).NewWriter(context.TODO())
@@ -85,7 +86,7 @@ func (i *ImageGCSStorageInfraImpl) storeIntoFile(fileName string, imageBytes []b
 	return nil
 }
 
-func (i *ImageGCSStorageInfraImpl) Exists(fileName string) (exists bool, err error) {
+func (i *ImageGCSStorageInfraImpl) Exists(_ *model.GitRepoDir, fileName string) (exists bool, err error) {
 	_, err = i.gcsClient.Bucket(i.bucketName).Object(fileName).Attrs(context.TODO())
 	if err == storage.ErrObjectNotExist {
 		return false, nil

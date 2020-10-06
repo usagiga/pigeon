@@ -7,8 +7,8 @@ type EsaInfra interface {
 }
 
 type ImageStorageInfra interface {
-	Fetch(srcUrl string) (skipped bool, err error)
-	Exists(fileName string) (exists bool, err error)
+	Fetch(repoDir *model.GitRepoDir, srcUrl string) (skipped bool, err error)
+	Exists(repoDir *model.GitRepoDir, fileName string) (exists bool, err error)
 }
 
 type GitInfra interface {
