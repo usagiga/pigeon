@@ -130,7 +130,6 @@ func TestImageGCSStorageInfraImpl_Fetch(t *testing.T) {
 
 	// Declare test cases
 	type Arg struct {
-		destPath string
 		srcUrl   string
 	}
 	type Result struct {
@@ -177,7 +176,7 @@ func TestImageGCSStorageInfraImpl_Fetch(t *testing.T) {
 	// Run test
 	for i, v := range testCases {
 		caseNum := i + 1
-		skipped, err := imageInfra.Fetch(v.arg.destPath, v.arg.srcUrl)
+		skipped, err := imageInfra.Fetch(v.arg.srcUrl)
 
 		// When raising NOT expected error
 		if err != nil && !v.isExpectedError {

@@ -23,7 +23,7 @@ func NewImageGCSStorageInfra(bucketName string, gcsClient *storage.Client) (infr
 	}
 }
 
-func (i *ImageGCSStorageInfraImpl) Fetch(dstDir, srcUrl string) (skipped bool, err error) {
+func (i *ImageGCSStorageInfraImpl) Fetch(srcUrl string) (skipped bool, err error) {
 	// Get name from URL
 	fileName, err := urlnode.GetLastNodeFromString(srcUrl)
 	if err != nil {
@@ -71,10 +71,10 @@ func (i *ImageGCSStorageInfraImpl) fetch(srcUrl string) (imageBytes []byte, err 
 	return imageBytes, nil
 }
 
-func (i *ImageGCSStorageInfraImpl) storeIntoFile(dstPath string, imageBytes []byte) (err error) {
+func (i *ImageGCSStorageInfraImpl) storeIntoFile(fileName string, imageBytes []byte) (err error) {
 	br := bytes.NewReader(imageBytes)
 
-	wc := i.gcsClient.Bucket(i.bucketName).Object(dstPath).NewWriter(context.TODO())
+	wc := i.gcsClient.Bucket(i.bucketName).Object(fileName).NewWriter(context.TODO())
 	if _, err = io.Copy(wc, br); err != nil {
 		return xerrors.Errorf("can't write image into stream: %w", err)
 	}
