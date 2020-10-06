@@ -11,19 +11,19 @@ import (
 	"net/http"
 )
 
-type ImageStorageInfraImpl struct {
+type ImageGCSStorageInfraImpl struct {
 	bucketName string
 	gcsClient  *storage.Client
 }
 
-func NewImageStorageInfra(bucketName string, gcsClient *storage.Client) (infra ImageStorageInfra) {
-	return &ImageStorageInfraImpl{
+func NewImageGCSStorageInfra(bucketName string, gcsClient *storage.Client) (infra ImageStorageInfra) {
+	return &ImageGCSStorageInfraImpl{
 		bucketName: bucketName,
 		gcsClient: gcsClient,
 	}
 }
 
-func (i *ImageStorageInfraImpl) Fetch(dstDir, srcUrl string) (skipped bool, err error) {
+func (i *ImageGCSStorageInfraImpl) Fetch(dstDir, srcUrl string) (skipped bool, err error) {
 	// Get name from URL
 	fileName, err := urlnode.GetLastNodeFromString(srcUrl)
 	if err != nil {
@@ -54,7 +54,7 @@ func (i *ImageStorageInfraImpl) Fetch(dstDir, srcUrl string) (skipped bool, err 
 	return false, nil
 }
 
-func (i *ImageStorageInfraImpl) fetch(srcUrl string) (imageBytes []byte, err error) {
+func (i *ImageGCSStorageInfraImpl) fetch(srcUrl string) (imageBytes []byte, err error) {
 	res, err := http.Get(srcUrl)
 	if err != nil {
 		return nil, xerrors.Errorf("Can't download image(URL: %s): %w", srcUrl, err)
@@ -71,7 +71,7 @@ func (i *ImageStorageInfraImpl) fetch(srcUrl string) (imageBytes []byte, err err
 	return imageBytes, nil
 }
 
-func (i *ImageStorageInfraImpl) storeIntoFile(dstPath string, imageBytes []byte) (err error) {
+func (i *ImageGCSStorageInfraImpl) storeIntoFile(dstPath string, imageBytes []byte) (err error) {
 	br := bytes.NewReader(imageBytes)
 
 	wc := i.gcsClient.Bucket(i.bucketName).Object(dstPath).NewWriter(context.TODO())
@@ -85,7 +85,7 @@ func (i *ImageStorageInfraImpl) storeIntoFile(dstPath string, imageBytes []byte)
 	return nil
 }
 
-func (i *ImageStorageInfraImpl) Exists(fileName string) (exists bool, err error) {
+func (i *ImageGCSStorageInfraImpl) Exists(fileName string) (exists bool, err error) {
 	_, err = i.gcsClient.Bucket(i.bucketName).Object(fileName).Attrs(context.TODO())
 	if err == storage.ErrObjectNotExist {
 		return false, nil

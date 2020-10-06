@@ -41,7 +41,7 @@ func initTestGCSClient(t *testing.T) (client *storage.Client, err error) {
 	return client, nil
 }
 
-func TestImageStorageInfraImpl_Exists(t *testing.T) {
+func TestImageGCSStorageInfraImpl_Exists(t *testing.T) {
 	// Initialize
 	gcsClient, err := initTestGCSClient(t)
 	if err != nil {
@@ -51,7 +51,7 @@ func TestImageStorageInfraImpl_Exists(t *testing.T) {
 	//noinspection GoUnhandledErrorResult
 	defer gcsClient.Close()
 
-	imageInfra := NewImageStorageInfra("pigeon-assets", gcsClient)
+	imageInfra := NewImageGCSStorageInfra("pigeon-assets", gcsClient)
 
 	// Declare test cases
 	type Arg struct {
@@ -116,7 +116,7 @@ func TestImageStorageInfraImpl_Exists(t *testing.T) {
 	}
 }
 
-func TestImageStorageInfraImpl_Fetch(t *testing.T) {
+func TestImageGCSStorageInfraImpl_Fetch(t *testing.T) {
 	// Initialize
 	gcsClient, err := initTestGCSClient(t)
 	if err != nil {
@@ -126,7 +126,7 @@ func TestImageStorageInfraImpl_Fetch(t *testing.T) {
 	//noinspection GoUnhandledErrorResult
 	defer gcsClient.Close()
 
-	imageInfra := NewImageStorageInfra("pigeon-assets", gcsClient)
+	imageInfra := NewImageGCSStorageInfra("pigeon-assets", gcsClient)
 
 	// Declare test cases
 	type Arg struct {
