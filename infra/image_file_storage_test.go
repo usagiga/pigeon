@@ -19,7 +19,7 @@ func initTestFile(t *testing.T) {
 	tmpDir := os.TempDir()
 	tmpGitRepoDir, _ = model.NewGitRepoDir(tmpDir, "test", "test", "test")
 
-	err := os.MkdirAll(tmpGitRepoDir.ImageDir(), 0666)
+	err := os.MkdirAll(tmpGitRepoDir.ImageDir(), 0777)
 	if err != nil {
 		t.Fatalf("Can't generate tmp dir: %v", err)
 	}
