@@ -71,7 +71,7 @@ func TestImageInfraImpl_Exists(t *testing.T) {
 		{
 			isExpectedError: false,
 			arg: Arg{
-				fileName: "existing.png",
+				fileName: "landscape.jpg",
 			},
 			result: Result{
 				exists: true,
@@ -85,13 +85,6 @@ func TestImageInfraImpl_Exists(t *testing.T) {
 			},
 			result: Result{
 				exists: false,
-			},
-		},
-		// On error
-		{
-			isExpectedError: true,
-			arg: Arg{
-				fileName: "error.png",
 			},
 		},
 	}
@@ -141,40 +134,22 @@ func TestImageInfraImpl_Fetch(t *testing.T) {
 		srcUrl   string
 	}
 
-	type Result struct {
-		exists bool
-	}
-
 	testCases := []struct {
 		isExpectedError bool
 		arg             Arg
-		result          Result
 	}{
-		// Nominal scenario (existing)
+		// Nominal scenario
 		{
 			isExpectedError: false,
 			arg: Arg{
-				destPath: "existing.png",
-			},
-			result: Result{
-				exists: true,
+				srcUrl: "https://example.com/index.html",
 			},
 		},
-		// Nominal scenario (not existing)
-		{
-			isExpectedError: false,
-			arg: Arg{
-				destPath: "not-existing.png",
-			},
-			result: Result{
-				exists: false,
-			},
-		},
-		// On error
+		// On error on fetch image
 		{
 			isExpectedError: true,
 			arg: Arg{
-				destPath: "error.png",
+				srcUrl: "error",
 			},
 		},
 	}
