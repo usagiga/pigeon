@@ -19,7 +19,7 @@ func initTestGCSClient(t *testing.T) (client *storage.Client, err error) {
 	clientChan := make(chan *storage.Client)
 	go func() {
 		for i := 0; i <= 5; i++ {
-			c, err := storage.NewClient(context.TODO(), option.WithEndpoint("https://fake-gcs-server:4443/storage/v1/"), option.WithHTTPClient(httpClient))
+			c, err := storage.NewClient(context.TODO(), option.WithEndpoint("https://localhost:4443/storage/v1/"), option.WithHTTPClient(httpClient))
 			if err != nil {
 				time.Sleep(2 * time.Duration(i) * time.Second)
 				t.Log("Can't initialize GCS client: ", err)
@@ -51,7 +51,7 @@ func TestImageInfraImpl_Exists(t *testing.T) {
 	//noinspection GoUnhandledErrorResult
 	defer gcsClient.Close()
 
-	imageInfra := NewImageInfra("pigeon-test", gcsClient)
+	imageInfra := NewImageInfra("pigeon-assets", gcsClient)
 
 	// Declare test cases
 	type Arg struct {
@@ -133,7 +133,7 @@ func TestImageInfraImpl_Fetch(t *testing.T) {
 	//noinspection GoUnhandledErrorResult
 	defer gcsClient.Close()
 
-	imageInfra := NewImageInfra("pigeon-test", gcsClient)
+	imageInfra := NewImageInfra("pigeon-assets", gcsClient)
 
 	// Declare test cases
 	type Arg struct {
