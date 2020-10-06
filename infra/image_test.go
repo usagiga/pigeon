@@ -133,16 +133,33 @@ func TestImageInfraImpl_Fetch(t *testing.T) {
 		destPath string
 		srcUrl   string
 	}
+	type Result struct {
+		skipped bool
+	}
 
 	testCases := []struct {
 		isExpectedError bool
 		arg             Arg
+		result          Result
 	}{
 		// Nominal scenario
 		{
 			isExpectedError: false,
 			arg: Arg{
 				srcUrl: "https://example.com/index.html",
+			},
+			result: Result{
+				skipped: false,
+			},
+		},
+		// Nominal scenario (Skipped)
+		{
+			isExpectedError: false,
+			arg: Arg{
+				srcUrl: "https://example.com/index.html",
+			},
+			result: Result{
+				skipped: true,
 			},
 		},
 		// On error on fetch image
@@ -151,13 +168,16 @@ func TestImageInfraImpl_Fetch(t *testing.T) {
 			arg: Arg{
 				srcUrl: "error",
 			},
+			result: Result{
+				skipped: false,
+			},
 		},
 	}
 
 	// Run test
 	for i, v := range testCases {
 		caseNum := i + 1
-		err := imageInfra.Fetch(v.arg.destPath, v.arg.srcUrl)
+		skipped, err := imageInfra.Fetch(v.arg.destPath, v.arg.srcUrl)
 
 		// When raising NOT expected error
 		if err != nil && !v.isExpectedError {
@@ -167,6 +187,16 @@ func TestImageInfraImpl_Fetch(t *testing.T) {
 		// When NOT raising expected error
 		if err == nil && v.isExpectedError {
 			t.Errorf("Case %d: This case is expected to raise error, but error didn't raised", caseNum)
+		}
+
+		// When returns NOT expected result
+		if skipped != v.result.skipped {
+			t.Errorf(
+				"Case %d: Returned 'skipped' is not expected.\nExpected:\t%v\nActual:\t%v",
+				caseNum,
+				v.result.skipped,
+				skipped,
+			)
 		}
 	}
 }
