@@ -28,7 +28,7 @@ $ pigeon -id 1234
 - Pigeon treats article title as file title, and article body as file contents.
     - ex: `diary/2020-01-01-test.md` will be stored on `${PIGEON_PROJECT_ARTICLE_DIR}/2020-01-01-test.md`
 
-NOTE : If you want to use it through Web API, I recommend [adnanh/webhook](https://github.com/adnanh/webhook)
+NOTE : If you want to use it through Web API, I recommend [adnanh/webhook](https://github.com/adnanh/webhook). See also [Example adnanh/webhook config](./example_webhook.md).
 
 
 ## Dependencies
@@ -37,9 +37,9 @@ NOTE : If you want to use it through Web API, I recommend [adnanh/webhook](https
     - [github.com/hiroakis/esa-go](https://github.com/hiroakis/esa-go/)
 - [esa.io](https://esa.io/)
 - Git
-- Google Cloud Storage
 - Git Repository on GitHub
     - Perhaps another services can use...?
+- (Optional) Google Cloud Storage
 
 
 ## License
