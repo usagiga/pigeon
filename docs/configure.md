@@ -24,11 +24,15 @@ Please set env vars as below.
 - `PIGEON_ESA_KEY` : Your esa Personal access tokens( you can found it in `/user/applications` )
 - `PIGEON_DIARY_REPO_URL` : Your diary repository on GitHub
 - `PIGEON_PROJECT_ARTICLE_DIR` : Directory where article store. It needs relative path(its origin is project root).
-- `PIGEON_PROJECT_IMAGE_DIR` : (OBSOLETED) Directory where images store. It needs  relative path.
+- `PIGEON_IMAGE_MODE` : Mode to change behavior treating images. `file` or `gcs` or `none`.
+    - If you choose `file`, all images stored on `PIGEON_PROJECT_IMAGE_DIR`.
+    - If you choose `gcs`, all images stored on GCS.
+    - If you choose `none`, all images are left as it is.
+- `PIGEON_PROJECT_IMAGE_DIR` : (Optional) Directory where images store. It needs relative path.
 - `PIGEON_PROJECT_IMAGE_VIEW_DIR` : Base URL where images store.
-- `PIGEON_PROJECT_ID` : Project ID on GCP
-- `PIGEON_BUCKET_ID` : GCS Bucket ID on `PIGEON_PROJECT_ID`
-- `GOOGLE_APPLICATION_CREDENTIALS` : Path to JSON of GCP credential to use GCS
+- `PIGEON_PROJECT_ID` : (Optional) Project ID on GCP
+- `PIGEON_BUCKET_ID` : (Optional) GCS Bucket ID on `PIGEON_PROJECT_ID`
+- `GOOGLE_APPLICATION_CREDENTIALS` : (Optional) Path to JSON of GCP credential to use GCS
 
 
 ## (Optional) Create article template

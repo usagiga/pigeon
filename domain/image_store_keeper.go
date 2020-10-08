@@ -10,10 +10,10 @@ import (
 )
 
 type ImageStoreKeeperUseCaseImpl struct {
-	imageInfra infra.ImageInfra
+	imageInfra infra.ImageStorageInfra
 }
 
-func NewImageStoreKeeperUseCase(imageInfra infra.ImageInfra) (domain ImageStoreKeeperUseCase) {
+func NewImageStoreKeeperUseCase(imageInfra infra.ImageStorageInfra) (domain ImageStoreKeeperUseCase) {
 	return &ImageStoreKeeperUseCaseImpl{
 		imageInfra: imageInfra,
 	}
@@ -21,7 +21,7 @@ func NewImageStoreKeeperUseCase(imageInfra infra.ImageInfra) (domain ImageStoreK
 
 func (d *ImageStoreKeeperUseCaseImpl) Store(repoDir *model.GitRepoDir, srcUrl string) (storedUrl string, err error) {
 	// Download specified image
-	_, err = d.imageInfra.Fetch(repoDir.ImageDir(), srcUrl)
+	_, err = d.imageInfra.Fetch(repoDir, srcUrl)
 	if err != nil {
 		return "", xerrors.Errorf("can't download image(URL: %s) : %w", srcUrl, err)
 	}

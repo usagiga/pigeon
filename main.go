@@ -22,20 +22,36 @@ func main() {
 	// Initialize esa.io client
 	esaClient := ConnectToEsa(config)
 
-	// Initialize GCS client
-	gcsClient, err := ConnectToStorage(config)
-	if err != nil {
-		log.Fatalf("Can't connect GCS. Stopping to launch: %+v", err)
-	}
-
 	// Initialize infra
 	esaInfra := infra.NewEsaInfra(esaClient)
 	gitInfra := infra.NewGitInfra(config)
-	imageInfra := infra.NewImageInfra(config.BucketID, gcsClient)
+
+	var imageStorageInfra infra.ImageStorageInfra
+	switch config.GetStoreImageMode() {
+	case model.None:
+		imageStorageInfra = nil
+	case model.File:
+		imageStorageInfra = infra.NewImageFileStorageInfra()
+	case model.GCS:
+		// Initialize GCS client
+		gcsClient, err := ConnectToStorage(config)
+		if err != nil {
+			log.Fatalf("Can't connect GCS. Stopping to launch: %+v", err)
+		}
+
+		imageStorageInfra = infra.NewImageGCSStorageInfra(config.BucketID, gcsClient)
+	}
 
 	// Initialize Domain
+	var imageStoreKeeperUseCase domain.ImageStoreKeeperUseCase
+	switch config.GetStoreImageMode() {
+	case model.None:
+		imageStoreKeeperUseCase = domain.NewNOPStoreKeeperUseCase()
+	default:
+		imageStoreKeeperUseCase = domain.NewImageStoreKeeperUseCase(imageStorageInfra)
+	}
+
 	gitRepoUseCase := domain.NewGitRepositoryUseCase(gitInfra)
-	imageStoreKeeperUseCase := domain.NewImageStoreKeeperUseCase(imageInfra)
 	articleBuilderUseCase := domain.NewArticleBuilderUseCase(imageStoreKeeperUseCase, esaInfra)
 
 	// Initialize Application

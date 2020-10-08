@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"crypto/tls"
+	"github.com/usagiga/pigeon/model"
 	"google.golang.org/api/option"
 	"net/http"
 	"testing"
@@ -41,7 +42,7 @@ func initTestGCSClient(t *testing.T) (client *storage.Client, err error) {
 	return client, nil
 }
 
-func TestImageInfraImpl_Exists(t *testing.T) {
+func TestImageGCSStorageInfraImpl_Exists(t *testing.T) {
 	// Initialize
 	gcsClient, err := initTestGCSClient(t)
 	if err != nil {
@@ -51,10 +52,11 @@ func TestImageInfraImpl_Exists(t *testing.T) {
 	//noinspection GoUnhandledErrorResult
 	defer gcsClient.Close()
 
-	imageInfra := NewImageInfra("pigeon-assets", gcsClient)
+	imageInfra := NewImageGCSStorageInfra("pigeon-assets", gcsClient)
 
 	// Declare test cases
 	type Arg struct {
+		repoDir *model.GitRepoDir
 		fileName string
 	}
 
@@ -92,7 +94,7 @@ func TestImageInfraImpl_Exists(t *testing.T) {
 	// Run test
 	for i, v := range testCases {
 		caseNum := i + 1
-		exists, err := imageInfra.Exists(v.arg.fileName)
+		exists, err := imageInfra.Exists(v.arg.repoDir, v.arg.fileName)
 
 		// When raising NOT expected error
 		if err != nil && !v.isExpectedError {
@@ -116,7 +118,7 @@ func TestImageInfraImpl_Exists(t *testing.T) {
 	}
 }
 
-func TestImageInfraImpl_Fetch(t *testing.T) {
+func TestImageGCSStorageInfraImpl_Fetch(t *testing.T) {
 	// Initialize
 	gcsClient, err := initTestGCSClient(t)
 	if err != nil {
@@ -126,11 +128,11 @@ func TestImageInfraImpl_Fetch(t *testing.T) {
 	//noinspection GoUnhandledErrorResult
 	defer gcsClient.Close()
 
-	imageInfra := NewImageInfra("pigeon-assets", gcsClient)
+	imageInfra := NewImageGCSStorageInfra("pigeon-assets", gcsClient)
 
 	// Declare test cases
 	type Arg struct {
-		destPath string
+		repoDir *model.GitRepoDir
 		srcUrl   string
 	}
 	type Result struct {
@@ -177,7 +179,7 @@ func TestImageInfraImpl_Fetch(t *testing.T) {
 	// Run test
 	for i, v := range testCases {
 		caseNum := i + 1
-		skipped, err := imageInfra.Fetch(v.arg.destPath, v.arg.srcUrl)
+		skipped, err := imageInfra.Fetch(v.arg.repoDir, v.arg.srcUrl)
 
 		// When raising NOT expected error
 		if err != nil && !v.isExpectedError {

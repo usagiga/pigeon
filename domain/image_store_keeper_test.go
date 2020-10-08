@@ -13,7 +13,7 @@ func TestImageStoreKeeperUseCaseImpl_Store(t *testing.T) {
 	// Initialize go mock
 	ctrl := gomock.NewController(t)
 
-	imageInfra := mock_infra.NewMockImageInfra(ctrl)
+	imageInfra := mock_infra.NewMockImageStorageInfra(ctrl)
 	imageInfra.EXPECT().Fetch(gomock.Any(), "https://example.com/test.png").Return(false, nil).Times(2)
 	imageInfra.EXPECT().Fetch(gomock.Any(), "https://example.com/error.png").Return(false, errors.New("error")).Times(1)
 

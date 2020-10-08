@@ -6,9 +6,9 @@ type EsaInfra interface {
 	GetArticle(id int) (article *model.Article, err error)
 }
 
-type ImageInfra interface {
-	Fetch(dstPath, srcUrl string) (skipped bool, err error)
-	Exists(fileName string) (exists bool, err error)
+type ImageStorageInfra interface {
+	Fetch(repoDir *model.GitRepoDir, srcUrl string) (skipped bool, err error)
+	Exists(repoDir *model.GitRepoDir, fileName string) (exists bool, err error)
 }
 
 type GitInfra interface {
