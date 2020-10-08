@@ -37,9 +37,9 @@ NOTE : If you want to use it through Web API, I recommend [adnanh/webhook](https
     - [github.com/hiroakis/esa-go](https://github.com/hiroakis/esa-go/)
 - [esa.io](https://esa.io/)
 - Git
-- Google Cloud Storage
 - Git Repository on GitHub
     - Perhaps another services can use...?
+- (Optional) Google Cloud Storage
 
 
 ## License

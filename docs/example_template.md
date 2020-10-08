@@ -1,3 +1,5 @@
+# Example template for esa.io
+
 It compatible with HUGO-like front matters.
 
 ## `Templates/%{Year}-%{month}-%{day}-title.md`
